@@ -1,10 +1,12 @@
 // @ts-ignore
-import classes from './templateName.module.scss';
+import classes from './TemplateName.module.scss';
 
 export interface TemplateNameProps {}
 
-export const TemplateName = ({ }: TemplateNameProps) => (
-  <div className={classes["templateName"]} data-testid="TemplateName">
+const TemplateName = ({ }: TemplateNameProps) => (
+  <div className={classes["TemplateName"]} data-testid="TemplateName">
     TemplateName Component
   </div>
 );
+
+export default TemplateName;
