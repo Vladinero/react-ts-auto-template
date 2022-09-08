@@ -24,6 +24,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "server": "json-server -w server/DB.json -p 5000",
+    "dev": "concurrently \"npm run server\" \"npm run start\"",
     "component": "generate-react component",
     "page": "generate-react component --type=page",
     "coverage": "yarn test --coverage --watchAll --collectCoverageFrom='src/components/**/*.{ts,tsx}' --collectCoverageFrom='!src/components/**/index.{ts,tsx}'"
@@ -47,6 +49,8 @@
     ]
   },
   "devDependencies": {
-    "generate-react-cli": "^7.3.0"
+    "concurrently": "^7.4.0",
+    "generate-react-cli": "^7.3.0",
+    "json-server": "^0.17.0"
   }
 }

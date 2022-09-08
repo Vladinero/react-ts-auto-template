@@ -6,12 +6,13 @@ import {useDebounce} from '../../hooks/useDebounce';
 import classes from './ExamplePage.module.scss';
 import {useActions} from '../../hooks/actions';
 import {useAppSelector} from '../../hooks/redux';
+import {useAddProductMutation, useDeleteProductMutation, useGetGoodsQuery} from '../../store/ProjectApi/goodsApi';
 
-export interface ExamplePageProps {
-}
-
-export const ExamplePage = ({}: ExamplePageProps) => {
+export const ExamplePage = () => {
   const [search, setSearch] = useState('');
+  const [count, setCount] = useState('');
+  const [newProduct, setNewProduct] = useState('');
+
   const debounced = useDebounce(search);
 
   const {data: users, isLoading, isError} = useGetUsersQuery(debounced, {
@@ -35,6 +36,23 @@ export const ExamplePage = ({}: ExamplePageProps) => {
 const removeFavourite = (repo_url: string) => {
   removeFromFavourite(repo_url);
 };
+
+
+  const {data: goods, isLoading: isGoodsLoading, isError: isGoodsError} = useGetGoodsQuery(count);
+  const [addProduct] = useAddProductMutation();
+
+  const handleAddProduct = async () => {
+  if (newProduct) {
+    await addProduct({title: newProduct, id: Date.now().toString()}).unwrap();
+  }
+  setNewProduct('')
+  };
+
+  const handleProduct = (e: React.ChangeEvent<HTMLInputElement>) => setNewProduct(e.target.value);
+
+const [deleteProduct] = useDeleteProductMutation();
+
+const handleDeleteProduct = async (id: string) => await deleteProduct(id).unwrap();
 
   return (
     <div className={classes["examplePage"]} data-testid="examplePage">
@@ -72,6 +90,23 @@ const removeFavourite = (repo_url: string) => {
       <h2>Favourites</h2>
       <ul>
         {favourites.map(fav => <li key={fav} onClick={() => removeFavourite(fav)}>{fav}</li>)}
+      </ul>
+
+      <h2>Goods</h2>
+      {isGoodsLoading && <h2>Goods loading...!</h2>}
+      {isGoodsError && <h2>Can't get goods!</h2>}
+      <input type="text" value={newProduct} onChange={handleProduct}/>
+      <button onClick={handleAddProduct}>Add good</button>
+      <select value={count} onChange={e => setCount(e.target.value)}>
+        <option value="''">all</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+      <ul>
+        {
+          goods?.map(good => <li key={good.id} onClick={() => handleDeleteProduct(good.id)}>{good.title}</li>)
+        }
       </ul>
     </div>)
 };
