@@ -128,3 +128,7 @@ export interface IRepo {
   default_branch: string;
 }
 
+export interface IGood {
+  id: string,
+  title: string
+}
